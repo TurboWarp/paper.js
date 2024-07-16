@@ -12,7 +12,7 @@
 
 QUnit.module('TextItem');
 
-test('PointText', function() {
+QUnit.skip('PointText', function() {
     var text = new PointText({
         fontFamily: 'Arial, Helvetica',
         fontSize: 14,

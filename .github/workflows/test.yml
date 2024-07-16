@@ -1,0 +1,47 @@
+# Based on the paperjs/paper.js deploy.yml, but without the deployment steps
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    env:
+      JVM_OPTS: -Xmx3200m
+      JDK_JAVA_OPTIONS: --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --add-exports java.base/sun.nio.ch=ALL-UNNAMED
+    steps: 
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - name: Setup Java
+        uses: actions/setup-java@91d3aa4956ec4a53e477c4907347b5e3481be8c9 # v2
+        with:
+          distribution: 'temurin'
+          java-version: 17
+      - name: Setup submodule
+        run: git submodule update --init --recursive
+      - uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v2
+        with:
+          cache: "npm"
+          node-version-file: ".nvmrc"
+      - name: Info
+        run: |
+          cat <<EOF
+          Node version: $(node --version)
+          NPM version: $(npm --version)
+          GitHub ref: ${{ github.ref }}
+          GitHub head ref: ${{ github.head_ref }}
+          EOF
+      - name: Setup
+        run: |
+          sudo apt-get update
+          sudo apt-get install pkg-config libcairo2-dev libpango1.0-dev libssl-dev libjpeg62-dev libgif-dev
+          TRAVIS_BRANCH="${{github.ref_name}}" travis/setup-git.sh # Configure git user info
+          travis/install-assets.sh
+          npm set progress=false
+          which gulp || npm install -g gulp-cli    
+      - name: Install NPM Dependencies
+        run: npm ci
+      - run: gulp jshint
+      - run: gulp minify
+      - run: gulp test
+      - run: gulp zip

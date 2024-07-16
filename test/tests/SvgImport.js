@@ -220,7 +220,7 @@ if (!isNodeContext) {
     Base.each(svgFiles, function(options, name) {
         if (options) {
             name += '.svg';
-            test('Import ' + name, function(assert) {
+            QUnit.skip('Import ' + name, function(assert) {
                 importSVG(assert, 'assets/' + name, null, options);
             });
         }

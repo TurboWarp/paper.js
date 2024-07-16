@@ -19,8 +19,8 @@ var gulp = require('gulp'),
 gulp.task('test', function(callback) {
     runSequence(
         'build',
-        'jshint'
-        // 'test:postbuild' // Disable tests for getting text stuff out
+        'jshint',
+        'test:postbuild' // Disable tests for getting text stuff out
     );
 });
 

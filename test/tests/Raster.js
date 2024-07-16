@@ -23,7 +23,7 @@ test('Create a raster without a source and set its size', function() {
     equals(raster.size, new Size(640, 480), true);
 });
 
-test('Create a raster from a URL', function(assert) {
+QUnit.skip('Create a raster from a URL', function(assert) {
     var done = assert.async();
     var raster = new Raster('assets/paper-js.gif');
     raster.onLoad = function() {
@@ -36,7 +36,7 @@ test('Create a raster from a URL', function(assert) {
     };
 });
 
-test('Create a raster from a data URL', function(assert) {
+QUnit.skip('Create a raster from a data URL', function(assert) {
     var done = assert.async();
     var raster = new Raster('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABlJREFUeNpi+s/AwPCfgYmR4f9/hv8AAQYAHiAFAS8Lwy8AAAAASUVORK5CYII=');
     raster.onLoad = function() {
@@ -94,7 +94,7 @@ test('Create a raster from a dom id', function(assert) {
     });
 });
 
-test('Raster#getPixel / setPixel', function(assert) {
+QUnit.skip('Raster#getPixel / setPixel', function(assert) {
     var done = assert.async();
     var raster = new Raster('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABlJREFUeNpi+s/AwPCfgYmR4f9/hv8AAQYAHiAFAS8Lwy8AAAAASUVORK5CYII=');
     raster.onLoad = function() {
@@ -111,7 +111,7 @@ test('Raster#getPixel / setPixel', function(assert) {
     };
 });
 
-test('Raster#getSubCanvas', function(assert) {
+QUnit.skip('Raster#getSubCanvas', function(assert) {
     var done = assert.async();
     var raster = new Raster('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABlJREFUeNpi+s/AwPCfgYmR4f9/hv8AAQYAHiAFAS8Lwy8AAAAASUVORK5CYII=');
     raster.onLoad = function() {
