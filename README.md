@@ -1,8 +1,6 @@
-# Scratch's fork of Paper.js
+# Fork of Paper.js
 
-[![NPM](https://img.shields.io/npm/v/@scratch/paper.svg)](https://www.npmjs.com/package/@scratch/paper)
-
-This is a fork of Paper.js for use in Scratch. Please do not contact the Paper.js authors to support this fork.
+This is a fork of Paper.js. Please do not contact the Paper.js authors to support this fork.
 
 _Original README.md below_
 
