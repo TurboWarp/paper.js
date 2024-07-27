@@ -318,9 +318,9 @@ new function() {
             if (entry.exportFilter
                     ? entry.exportFilter(item, value)
                     : !parent || !Base.equals(parent[get](), value) ||
-                    // Scratch-specific: always apply styles to text elements to
+                    // Scratch-specific: always apply fill style to text elements
                     // because gradients must be specified to avoid transform problems.
-                      item instanceof paper.PointText) {
+                      (entry.attribute === 'fill' && item instanceof paper.PointText)) {
                 if (type === 'color' && value != null) {
                     // Support for css-style rgba() values is not in SVG 1.1, so
                     // separate the alpha value of colors with alpha into the

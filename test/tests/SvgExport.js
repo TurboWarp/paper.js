@@ -245,3 +245,27 @@ if (!isNodeContext) {
         compareSVG(assert.async(), svg, project.activeLayer);
     });
 }
+
+test('TextItem always saves fill but not extra redundant styles', function() {
+    // This is to validate that we didn't regress the second bug fix in
+    // https://github.com/scratchfoundation/paper.js/pull/15
+
+    var group = new Group();
+    var text = new PointText({
+        parent: group
+    });
+    text.fillColor = {
+        gradient: {
+            stops: [
+                ['red', 0],
+                ['blue', 1]
+            ]
+        }
+    };
+
+    var exported = project.exportSVG();
+    var textElement = exported.childNodes[1].childNodes[0].childNodes[0];
+    equals(textElement.tagName, 'text');
+    equals(textElement.getAttribute('fill'), 'url(#color-1)');
+    equals(textElement.hasAttribute('style'), false);
+});
