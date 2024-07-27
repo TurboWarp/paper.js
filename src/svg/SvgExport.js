@@ -315,6 +315,17 @@ new function() {
             // "fill-rule" will have the invalid value of "none" if undefined.
             if (value === undefined) return;
 
+            // At the root level, don't serialize styles that are already the
+            // default from the browser.
+            if (
+                isRoot &&
+                entry.rootDefault !== undefined &&
+                entry.rootDefault !== null &&
+                Base.equals(value, entry.rootDefault)
+            ) {
+                return;
+            }
+
             if (entry.exportFilter
                     ? entry.exportFilter(item, value)
                     : !parent || !Base.equals(parent[get](), value) ||

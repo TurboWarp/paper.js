@@ -269,3 +269,22 @@ test('TextItem always saves fill but not extra redundant styles', function() {
     equals(textElement.getAttribute('fill'), 'url(#color-1)');
     equals(textElement.hasAttribute('style'), false);
 });
+
+test('Root has no redundant styles', function() {
+    var group = new Group([]);
+    var exported = project.exportSVG();
+    var g = exported.childNodes[0];
+
+    equals(g.tagName, 'g');
+    equals(g.attributes.length, 5);
+    equals(g.getAttribute('fill'), 'none');
+    equals(g.getAttribute('stroke'), 'none');
+    equals(g.getAttribute('stroke-miterlimit'), '10');
+    equals(g.getAttribute('font-family'), 'sans-serif');
+    equals(g.getAttribute('font-size'), '12');
+
+    // for (var i = 0; i < g.attributes.length; i++) {
+    //     var attr = g.attributes[i];
+    //     console.log(attr.name, attr.value);
+    // }
+});
