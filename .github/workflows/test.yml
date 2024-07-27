@@ -1,4 +1,6 @@
-# Based on the paperjs/paper.js deploy.yml, but without the deployment steps
+# Based on the scratchfoundation/paper.js deploy.yml, but without the deployment steps
+
+name: Test
 
 on:
   push:
