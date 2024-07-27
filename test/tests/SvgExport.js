@@ -288,3 +288,11 @@ test('Root has no redundant styles', function() {
     //     console.log(attr.name, attr.value);
     // }
 });
+
+test('Does not export data-paper-data', function() {
+    var group = new Group([]);
+    group.data.something = 'whatever';
+    var exported = project.exportSVG();
+    var g = exported.childNodes[0].childNodes[0];
+    equals(g.hasAttribute('data-paper-data'), false);
+});
