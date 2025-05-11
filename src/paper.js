@@ -97,8 +97,6 @@ var paper = function(self, undefined) {
 
 /*#*/ include('anim/Tween.js');
 
-/*#*/ include('net/Http.js');
-
 /*#*/ include('canvas/CanvasProvider.js');
 /*#*/ include('canvas/BlendMode.js');
 /*#*/ if (__options.load) {
