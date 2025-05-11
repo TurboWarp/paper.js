@@ -1,8 +1,16 @@
 # Fork of Paper.js
 
-This is a fork of Paper.js. Please do not contact the Paper.js authors to support this fork.
+This is a fork of Paper.js with bug fixes and security hardening.
 
-_Original README.md below_
+Getting this fork to build on modern systems may be a challenge. As of May 2025, a viable development environment is known to be:
+
+ - Linux
+ - Node.js v18.20.8 (20 and later are known to not work due to old dependencies)
+ - Run `npm test` to run the unit tests.
+ - Use publish.sh from https://github.com/TurboWarp/publishing-scripts to upload to npm.
+ - Good luck!
+
+Original README.md below.
 
 # Paper.js - The Swiss Army Knife of Vector Graphics Scripting
 
