@@ -638,78 +638,81 @@ new function() {
             container,
             parent,
             next;
-        if (isRoot && isElement) {
-            // Set rootSize to view size, as getSize() may refer to it (#1242).
-            rootSize = paper.getView().getSize();
-            // Now set rootSize to the root element size, and fall-back to view.
-            rootSize = getSize(node, null, null, true) || rootSize;
-            // We need to move the SVG node to the current document, so default
-            // styles are correctly inherited! For this we create and insert a
-            // temporary SVG container which is removed again at the end. This
-            // container also helps fix a bug on IE.
-            container = SvgElement.create('svg', {
-                // If no stroke-width is set, IE/Edge appears to have a
-                // default of 0.01px. We can set a default style on the
-                // parent container as a more sensible fall-back. Also, browsers
-                // have a default miter-limit of 4, while Paper.js has 10
-                style: 'stroke-width: 1px; stroke-miterlimit: 10'
-            });
-            parent = node.parentNode;
-            next = node.nextSibling;
-            container.appendChild(node);
-            body.appendChild(container);
-        }
-        // Have items imported from SVG not bake in all transformations to their
-        // content and children, as this is how SVG works too, but preserve the
-        // current setting so we can restore it after. Also don't insert them
-        // into the scene graph automatically, as we do so by hand.
-        var settings = paper.settings,
-            applyMatrix = settings.applyMatrix,
-            insertItems = settings.insertItems;
-        settings.applyMatrix = false;
-        settings.insertItems = false;
-        var importer = importers[type],
-            item = importer && importer(node, type, options, isRoot) || null;
-        settings.insertItems = insertItems;
-        settings.applyMatrix = applyMatrix;
-        if (item) {
-            // Do not apply attributes if this is a #document node.
-            // See importGroup() for an explanation of filtering for Group:
-            if (isElement && !(item instanceof Group))
-                item = applyAttributes(item, node, isRoot);
-            // Support onImportItem callback, to provide mechanism to handle
-            // special attributes (e.g. inkscape:transform-center)
-            var onImport = options.onImport,
-                data = isElement && node.getAttribute('data-paper-data');
-            if (onImport)
-                item = onImport(node, item, options) || item;
-            if (options.expandShapes && item instanceof Shape) {
-                item.remove();
-                item = item.toPath();
+        try {
+            if (isRoot && isElement) {
+                // Set rootSize to view size, as getSize() may refer to it (#1242).
+                rootSize = paper.getView().getSize();
+                // Now set rootSize to the root element size, and fall-back to view.
+                rootSize = getSize(node, null, null, true) || rootSize;
+                // We need to move the SVG node to the current document, so default
+                // styles are correctly inherited! For this we create and insert a
+                // temporary SVG container which is removed again at the end. This
+                // container also helps fix a bug on IE.
+                container = SvgElement.create('svg', {
+                    // If no stroke-width is set, IE/Edge appears to have a
+                    // default of 0.01px. We can set a default style on the
+                    // parent container as a more sensible fall-back. Also, browsers
+                    // have a default miter-limit of 4, while Paper.js has 10
+                    style: 'stroke-width: 1px; stroke-miterlimit: 10'
+                });
+                parent = node.parentNode;
+                next = node.nextSibling;
+                container.appendChild(node);
+                body.appendChild(container);
             }
-            if (data)
-                item._data = JSON.parse(data);
-        }
-        if (container) {
-            //  After import, move things back to how they were:
-            body.removeChild(container);
-            if (parent) {
-                if (next) {
-                    parent.insertBefore(node, next);
-                } else {
-                    parent.appendChild(node);
+            // Have items imported from SVG not bake in all transformations to their
+            // content and children, as this is how SVG works too, but preserve the
+            // current setting so we can restore it after. Also don't insert them
+            // into the scene graph automatically, as we do so by hand.
+            var settings = paper.settings,
+                applyMatrix = settings.applyMatrix,
+                insertItems = settings.insertItems;
+            settings.applyMatrix = false;
+            settings.insertItems = false;
+            var importer = importers[type],
+                item = importer && importer(node, type, options, isRoot) || null;
+            settings.insertItems = insertItems;
+            settings.applyMatrix = applyMatrix;
+            if (item) {
+                // Do not apply attributes if this is a #document node.
+                // See importGroup() for an explanation of filtering for Group:
+                if (isElement && !(item instanceof Group))
+                    item = applyAttributes(item, node, isRoot);
+                // Support onImportItem callback, to provide mechanism to handle
+                // special attributes (e.g. inkscape:transform-center)
+                var onImport = options.onImport,
+                    data = isElement && node.getAttribute('data-paper-data');
+                if (onImport)
+                    item = onImport(node, item, options) || item;
+                if (options.expandShapes && item instanceof Shape) {
+                    item.remove();
+                    item = item.toPath();
+                }
+                if (data)
+                    item._data = JSON.parse(data);
+            }
+            // Clear definitions at the end of import?
+            if (isRoot) {
+                definitions = {};
+                // Now if settings.applyMatrix was set, apply recursively and set
+                // #applyMatrix = true on the item and all children.
+                if (item && Base.pick(options.applyMatrix, applyMatrix))
+                    item.matrix.apply(true, true);
+            }
+            return item;
+        } finally {
+            if (container) {
+                //  After import, move things back to how they were:
+                body.removeChild(container);
+                if (parent) {
+                    if (next) {
+                        parent.insertBefore(node, next);
+                    } else {
+                        parent.appendChild(node);
+                    }
                 }
             }
         }
-        // Clear definitions at the end of import?
-        if (isRoot) {
-            definitions = {};
-            // Now if settings.applyMatrix was set, apply recursively and set
-            // #applyMatrix = true on the item and all children.
-            if (item && Base.pick(options.applyMatrix, applyMatrix))
-                item.matrix.apply(true, true);
-        }
-        return item;
     }
 
     function importSVG(source, options, owner) {
