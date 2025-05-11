@@ -756,28 +756,7 @@ new function() {
             }
         }
 
-        // Have the group not pass on all transformations to its children,
-        // as this is how SVG works too.
-        // See if it's a string but handle markup separately, using `[\s\S]` to
-        // also match the first tag if it only starts on the second line in a
-        // multi-line string.
-        if (typeof source === 'string' && !/^[\s\S]*</.test(source)) {
-            // First see if we're meant to import an element with the given
-            // id.
-            var node = document.getElementById(source);
-            // Check if the string does not represent SVG data, in which
-            // case it must be the URL of a SVG to be loaded.
-            if (node) {
-                onLoad(node);
-            } else {
-                Http.request({
-                    url: source,
-                    async: true,
-                    onLoad: onLoad,
-                    onError: onError
-                });
-            }
-        } else if (typeof File !== 'undefined' && source instanceof File) {
+        if (typeof File !== 'undefined' && source instanceof File) {
             // Load local file through FileReader
             var reader = new FileReader();
             reader.onload = function() {
