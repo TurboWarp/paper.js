@@ -20,14 +20,6 @@
  *
  * Distributed under the MIT license.
  *
- ***
- *
- * Acorn.js
- * https://marijnhaverbeke.nl/acorn/
- *
- * Acorn is a tiny, fast JavaScript parser written in JavaScript,
- * created by Marijn Haverbeke and released under an MIT license.
- *
  */
 
 // Allow the minification of the undefined variable by defining it as a local
