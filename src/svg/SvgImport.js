@@ -22,6 +22,53 @@ new function() {
     var definitions = {},
         rootSize;
 
+    var iframe;
+    function getSandbox() {
+        if (!iframe) {
+            iframe = document.createElement('iframe');
+            iframe.className = 'tw-paper-sandbox';
+
+            // iframe must be same-origin so we can append elements into it directly.
+            // By not including allow-scripts, the page itself won't be able to run anything, though
+            // we can still access it.
+            iframe.sandbox = 'allow-same-origin';
+
+            // If iframe has display: none then Firefox and Chrome will stub certain SVG APIs. Using this alternative
+            // approach to hiding the iframe ensures that it will behave more closely to how it would if the SVG was
+            // in the regular DOM. (eg. getBBox() would always return 0x0)
+            iframe.style.position = 'absolute';
+            iframe.style.top = '-10000px';
+            iframe.style.left = '-10000px';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.opacity = '0';
+            iframe.style.visibility = 'hidden';
+            iframe.style.pointerEvents = 'none';
+            iframe.tabIndex = -1;
+            iframe.ariaHidden = true;
+            document.body.appendChild(iframe);
+
+            // Use <meta> with a strict CSP so that the elements inside the iframe can't make any requests.
+            // Code execution is already blocked by the sandbox attribute but it's also blocked here for an extra layer.
+            // It would be better to use srcdoc instead of document.write(), but srcdoc would make us wait until the load
+            // event so we would have to become async.
+            iframe.contentDocument.open();
+            iframe.contentDocument.write(
+                '<!DOCTYPE html>\n' +
+                '<html>\n' +
+                '   <head>\n' +
+                '       <meta charset="utf-8">\n' +
+                '       <meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\' data:; font-src data:; img-src data:">\n' +
+                '   </head>\n' +
+                '   <body></body>\n' +
+                '</html>'
+            );
+            iframe.contentDocument.close();
+        }
+
+        return iframe.contentDocument.body;
+    }
+
     function getValue(node, name, isString, allowNull, allowPercent,
             defaultValue) {
         // Interpret value as number. Never return NaN, but 0 instead.
@@ -634,7 +681,7 @@ new function() {
         // jsdom in Node.js uses uppercase values for nodeName...
         var type = node.nodeName.toLowerCase(),
             isElement = type !== '#document',
-            body = document.body,
+            sandbox = getSandbox(),
             container,
             parent,
             next;
@@ -658,7 +705,7 @@ new function() {
                 parent = node.parentNode;
                 next = node.nextSibling;
                 container.appendChild(node);
-                body.appendChild(container);
+                sandbox.appendChild(container);
             }
             // Have items imported from SVG not bake in all transformations to their
             // content and children, as this is how SVG works too, but preserve the
@@ -700,7 +747,7 @@ new function() {
         } finally {
             if (container) {
                 //  After import, move things back to how they were:
-                body.removeChild(container);
+                sandbox.removeChild(container);
                 if (parent) {
                     if (next) {
                         parent.insertBefore(node, next);
