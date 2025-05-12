@@ -680,16 +680,13 @@ new function() {
                     item = applyAttributes(item, node, isRoot);
                 // Support onImportItem callback, to provide mechanism to handle
                 // special attributes (e.g. inkscape:transform-center)
-                var onImport = options.onImport,
-                    data = isElement && node.getAttribute('data-paper-data');
+                var onImport = options.onImport;
                 if (onImport)
                     item = onImport(node, item, options) || item;
                 if (options.expandShapes && item instanceof Shape) {
                     item.remove();
                     item = item.toPath();
                 }
-                if (data)
-                    item._data = JSON.parse(data);
             }
             // Clear definitions at the end of import?
             if (isRoot) {
