@@ -27,6 +27,11 @@ gulp.task('test', function(callback) {
 gulp.task('test:postbuild', ['test:phantom', 'test:node']);
 
 gulp.task('test:phantom', ['minify:acorn'], function() {
+    // The PhantomJS used by paper.js requires OpenSSL v1.1.1, which is no longer supported.
+    // We only test with local files so we don't need SSL anyways, so we'll just disable the support
+    // so that the tests can still pass on modern systems.
+    process.env.OPENSSL_CONF = '/dev/null';
+
     return gulp.src('index.html', { cwd: 'test' })
         .pipe(qunits({
             checkGlobals: true,
