@@ -1192,15 +1192,3 @@ paper.setup('');
 paper.setup({} as HTMLCanvasElement);
 paper.setup(size);
 paper.activate();
-
-
-//
-// PaperScript
-//
-
-paper.PaperScript.compile('');
-paper.PaperScript.compile('', object);
-paper.PaperScript.execute('', paperScope);
-paper.PaperScript.execute('', paperScope, object);
-paper.PaperScript.load();
-paper.PaperScript.load({} as HTMLScriptElement);
