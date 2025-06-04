@@ -14,17 +14,17 @@ jobs:
       JVM_OPTS: -Xmx3200m
       JDK_JAVA_OPTIONS: --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --add-exports java.base/sun.nio.ch=ALL-UNNAMED
     steps: 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@v4
         with:
           persist-credentials: false
       - name: Setup Java
-        uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 17
       - name: Setup submodule
         run: git submodule update --init --recursive
-      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
+      - uses: actions/setup-node@v4
         with:
           cache: "npm"
           node-version-file: ".nvmrc"
