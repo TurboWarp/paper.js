@@ -365,7 +365,7 @@ item.hitTestAll(point);
 item.hitTestAll(point, {});
 item.matches({});
 item.matches(callback);
-item.matches(name, {});
+item.matches(item.name, {});
 item.getItems({});
 item.getItems(callback);
 item.getItem({});
@@ -1065,7 +1065,6 @@ new paperScope.SymbolItem(symbolDefinition);
 new paperScope.TextItem();
 new paperScope.Tool();
 new paperScope.ToolEvent();
-new paperScope.Tween(object, object, object, 0);
 new paperScope.View();
 //
 // Global PaperScope instance
@@ -1084,12 +1083,3 @@ paper.setup('');
 paper.setup({});
 paper.setup(size);
 paper.activate();
-//
-// PaperScript
-//
-paper.PaperScript.compile('');
-paper.PaperScript.compile('', object);
-paper.PaperScript.execute('', paperScope);
-paper.PaperScript.execute('', paperScope, object);
-paper.PaperScript.load();
-paper.PaperScript.load({});

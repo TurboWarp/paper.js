@@ -1170,7 +1170,6 @@ new paperScope.SymbolItem(symbolDefinition);
 new paperScope.TextItem();
 new paperScope.Tool();
 new paperScope.ToolEvent();
-new paperScope.Tween(object, object, object, 0);
 new paperScope.View();
 
 
