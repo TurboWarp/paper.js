@@ -1,0 +1,50 @@
+# should be largely the same as test.yml
+
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish-to-npm:
+    runs-on: ubuntu-latest
+    env:
+      JVM_OPTS: -Xmx3200m
+      JDK_JAVA_OPTIONS: --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --add-exports java.base/sun.nio.ch=ALL-UNNAMED
+    steps: 
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+      - name: Setup submodule
+        run: git submodule update --init --recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+      - name: Setup
+        run: |
+          sudo apt-get update
+          sudo apt-get install pkg-config libcairo2-dev libpango1.0-dev libssl-dev libjpeg62-dev libgif-dev
+          npm set progress=false
+          which gulp || npm install -g gulp-cli    
+      - name: Install NPM Dependencies
+        run: npm ci
+      - run: gulp jshint
+      - run: gulp minify
+      - run: gulp test
+      - run: gulp zip
+      # OIDC publishing requires very recent Node.js but building paper.js requires old Node.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm publish
