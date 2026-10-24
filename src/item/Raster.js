@@ -59,11 +59,6 @@ var Raster = Item.extend(/** @lends Raster# */{
      *     console.log('The image has loaded.');
      * };
      *
-     * @example // Creating a raster using the id of a DOM Image:
-     *
-     * // Create a raster using the id of the image:
-     * var raster = new Raster('art');
-     *
      * @example // Creating a raster using a DOM Image:
      *
      * // Find the element using its id:
@@ -117,12 +112,7 @@ var Raster = Item.extend(/** @lends Raster# */{
         if (!this._initialize(source,
                 position !== undefined && Point.read(arguments))) {
             var image,
-                type = typeof source,
-                object = type === 'string'
-                    ? document.getElementById(source)
-                    : type  === 'object'
-                        ? source
-                        : null;
+                object = typeof source  === 'object' ? source : null;
             if (object && object !== Item.NO_INSERT) {
                 if (object.getContext || object.naturalHeight != null) {
                     image = object;

@@ -74,26 +74,6 @@ test('Create a raster from a canvas', function() {
     equals(raster.size, new Size(30, 20), true);
 });
 
-test('Create a raster from a dom id', function(assert) {
-    var done = assert.async();
-    var img = document.createElement('img');
-    img.src = 'assets/paper-js.gif';
-    img.id = 'testimage';
-    document.body.appendChild(img);
-    DomEvent.add(img, {
-        load: function() {
-            var raster = new Raster('testimage');
-            equals(raster.size, new Size(146, 146), true);
-            document.body.removeChild(img);
-            done();
-        },
-        error: function() {
-            pushFailure('Loading from a valid data URL should not give an error.');
-            done();
-        }
-    });
-});
-
 QUnit.skip('Raster#getPixel / setPixel', function(assert) {
     var done = assert.async();
     var raster = new Raster('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABlJREFUeNpi+s/AwPCfgYmR4f9/hv8AAQYAHiAFAS8Lwy8AAAAASUVORK5CYII=');
