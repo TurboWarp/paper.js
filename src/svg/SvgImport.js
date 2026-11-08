@@ -48,6 +48,12 @@ new function() {
             iframe.ariaHidden = true;
             document.body.appendChild(iframe);
 
+            if (!iframe.contentDocument) {
+                iframe.parentNode.removeChild(iframe);
+                iframe = null;
+                throw new Error('Paper import sandbox is not available in this context.');
+            }
+
             // Use <meta> with a strict CSP so that the elements inside the iframe can't make any requests.
             // Code execution is already blocked by the sandbox attribute but it's also blocked here for an extra layer.
             // It would be better to use srcdoc instead of document.write(), but srcdoc would make us wait until the load
